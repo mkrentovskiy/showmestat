@@ -1,10 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <libwebsockets.h>
-
 #include "config.h"
 
 int callback_http(struct libwebsocket_context *context,
@@ -29,24 +22,7 @@ int callback_http(struct libwebsocket_context *context,
                 printf("resource path: %s\n", resource_path);
                 
                 char *extension = strrchr(resource_path, '.');
-                char *mime;
-                
-                if(extension == NULL) {
-                    mime = "text/plain";
-                } else if (strcmp(extension, ".png") == 0) {
-                    mime = "image/png";
-                } else if (strcmp(extension, ".jpg") == 0) {
-                    mime = "image/jpg";
-                } else if (strcmp(extension, ".gif") == 0) {
-                    mime = "image/gif";
-                } else if (strcmp(extension, ".html") == 0) {
-                    mime = "text/html";
-                } else if (strcmp(extension, ".css") == 0) {
-                    mime = "text/css";
-                } else {
-                    mime = "text/plain";
-                }
-
+                char *mime = mime_type(resource_path);
                 libwebsockets_serve_http_file(context, wsi, resource_path, mime, NULL, 0);
             }
             break;
