@@ -5,14 +5,18 @@
 #define MAX_STATIC_PATH 30
 #define STATIC_PATH_LEN (strlen(DOCUMENT_ROOT) + MAX_STATIC_PATH)
 
-
 int callback_http(struct libwebsocket_context *context,
+                         struct libwebsocket *wsi,
+                         enum libwebsocket_callback_reasons reason, void *user,
+                         void *in, size_t len);
+int callback_stat(struct libwebsocket_context *context,
                          struct libwebsocket *wsi,
                          enum libwebsocket_callback_reasons reason, void *user,
                          void *in, size_t len);
 
 static struct libwebsocket_protocols protocols[] = {
     { "http-only", callback_http, 0 },
+    { "stat", callback_stat, 0 },
     { NULL, NULL, 0 }
     
 };
