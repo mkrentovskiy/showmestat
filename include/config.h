@@ -1,54 +1,6 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <libwebsockets.h>
-
-/*
-    MIME-types
-*/
-
-#define MIME(ext, type) if(strcmp(extension, ext) == 0) return type;
-
-static inline char * mime_type(char *resource_path) 
-{
-    char *extension = strrchr(resource_path, '.');
-
-    if(extension == NULL) return "text/plain";
-    MIME(".png", "image/png")
-    MIME(".jpg", "image/jpg")
-    MIME(".css", "image/css")
-    MIME(".html", "text/html")
-    MIME(".svg", "image/svg")
-
-    return "text/plain";
-}
-
-
-/*
-    Routing
-*/
-
-int callback_http(struct libwebsocket_context *context,
-                         struct libwebsocket *wsi,
-                         enum libwebsocket_callback_reasons reason, void *user,
-                         void *in, size_t len);
-int callback_stat(struct libwebsocket_context *context,
-                         struct libwebsocket *wsi,
-                         enum libwebsocket_callback_reasons reason, void *user,
-                         void *in, size_t len);
-
-static struct libwebsocket_protocols protocols[] = {
-    { "http-only", callback_http, 0 },
-    { "stat", callback_stat, 0 },
-    { NULL, NULL, 0 }
-    
-};
-
 /*
     Web-server configuratons
 */
@@ -60,7 +12,7 @@ static struct libwebsocket_protocols protocols[] = {
 static struct lws_context_creation_info webserver_config = {
             .port = 8000,
             .iface = NULL,
-            .protocols = protocols,
+            .protocols = protocols, /* -> op.h */
             .extensions = NULL,
             .token_limits = NULL,
             .ssl_cert_filepath = NULL,
@@ -77,5 +29,10 @@ static struct lws_context_creation_info webserver_config = {
             .provided_client_ssl_ctx = NULL
         };
 
+/*
+    Application configuration
+*/
+
+#define TARGET_FILE "test.txt"
 
 #endif

@@ -1,89 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <unistd.h>
+#include <signal.h>
+#include <fcntl.h>
+
+#include <libwebsockets.h>
+
+#include "op.h"
 #include "config.h"
 
 int callback_http(struct libwebsocket_context *context,
-                         struct libwebsocket *wsi,
-                         enum libwebsocket_callback_reasons reason, void *user,
-                         void *in, size_t len)
+                  struct libwebsocket *wsi,
+                  enum libwebsocket_callback_reasons reason, 
+                  void *user,
+                  void *in, 
+                  size_t len)
 {
-    
-    switch (reason) {
-        case LWS_CALLBACK_CLIENT_WRITEABLE:
-            printf("connection established\n");
-            
+    switch(reason) {
         case LWS_CALLBACK_HTTP: {
-            char *requested_uri = (char *) in;
+            char *request = (char *) in;
             char resource_path[STATIC_PATH_LEN];
             
-            printf("requested URI: %s\n", requested_uri);
-            if(strcmp(requested_uri, "/") == 0) requested_uri = "/index.html";
+            lwsl_notice("HTTP: Requested URI: %s\n", request);
 
-            if(strlen(requested_uri) < MAX_STATIC_PATH) {                   
-                sprintf(resource_path, DOCUMENT_ROOT"%s", requested_uri);
-                printf("resource path: %s\n", resource_path);
-                
-                char *extension = strrchr(resource_path, '.');
+            if(!strcmp(request, "/")) request = "/index.html";
+            if(strlen(request) < MAX_STATIC_PATH) {                   
+                sprintf(resource_path, DOCUMENT_ROOT"%s", request);
                 char *mime = mime_type(resource_path);
+
+                lwsl_notice("HTTP: Resource path: %s, MIME: %s\n", resource_path, mime);
+
                 libwebsockets_serve_http_file(context, wsi, resource_path, mime, NULL, 0);
             }
             break;
         }
     }
+
     return 0;
 }
 
 int callback_stat(struct libwebsocket_context *context,
-                         struct libwebsocket *wsi,
-                         enum libwebsocket_callback_reasons reason, void *user,
-                         void *in, size_t len)
+                  struct libwebsocket *wsi,
+                  enum libwebsocket_callback_reasons reason, 
+                  void *user,
+                  void *in, 
+                  size_t len)
 {
-    
+    struct stat_session_data *state = (struct stat_session_data *) user;
+
     switch (reason) {
-        case LWS_CALLBACK_CLIENT_WRITEABLE:
-            printf("connection established\n");
+        case LWS_CALLBACK_CLIENT_WRITEABLE: {
+            state->fd = open(TARGET_FILE, O_RDONLY); 
+            break;            
+        }
             
         case LWS_CALLBACK_HTTP: {
-            char *requested_uri = (char *) in;
-            printf("requested URI: %s\n", requested_uri);
+            char *request = (char *) in;
             
-            if (strcmp(requested_uri, "/") == 0) {
-                void *universal_response = "Hello, World!";
-                libwebsocket_write(wsi, universal_response,
-                                   strlen(universal_response), LWS_WRITE_HTTP);
-                break;
-
-            } else {
-                char resource_path[STATIC_PATH_LEN];
-                
-                if(strlen(requested_uri) < MAX_STATIC_PATH) {                   
-                    sprintf(resource_path, DOCUMENT_ROOT"%s", requested_uri);
-                    printf("resource path: %s\n", resource_path);
-                    
-                    char *extension = strrchr(resource_path, '.');
-                    char *mime;
-                    
-                    if(extension == NULL) {
-                        mime = "text/plain";
-                    } else if (strcmp(extension, ".png") == 0) {
-                        mime = "image/png";
-                    } else if (strcmp(extension, ".jpg") == 0) {
-                        mime = "image/jpg";
-                    } else if (strcmp(extension, ".gif") == 0) {
-                        mime = "image/gif";
-                    } else if (strcmp(extension, ".html") == 0) {
-                        mime = "text/html";
-                    } else if (strcmp(extension, ".css") == 0) {
-                        mime = "text/css";
-                    } else {
-                        mime = "text/plain";
-                    }
-
-                    libwebsockets_serve_http_file(context, wsi, resource_path, mime, NULL, 0);
-                }
+            if(!strcmp(request, "/get")) {
+                lwsl_notice("STAT: Request for content.\n");
             }
+
             break;
+        }
+
+        case LWS_CALLBACK_CLOSED_HTTP:
+        {
+            if(state->fd) {
+                close(state->fd);
+                state->fd = 0;
+            } 
+            break;            
         }
     }
     return 0;
+}
+
+bool internal_loop;
+void sighandler(int sig)
+{
+    internal_loop = false;
 }
 
 int main(void) {
@@ -92,13 +90,19 @@ int main(void) {
     context = libwebsocket_create_context(&webserver_config);
     
     if(context == NULL) {
-        lwsl_err("libwebsocket init failed");
+        lwsl_err("libwebsocket init failed.\n");
         return -1;
     }
     
-    lwsl_notice("starting server");
-    while(1) libwebsocket_service(context, 50); 
-    lwsl_notice("stoping server");
+    lwsl_notice("starting server.\n");
+    
+    internal_loop = true;
+    signal(SIGINT, sighandler);
+
+    while(internal_loop) libwebsocket_service(context, 50); 
+    
+    lwsl_notice("stoping server.\n");
+    
     libwebsocket_context_destroy(context);
     
     return 0;
