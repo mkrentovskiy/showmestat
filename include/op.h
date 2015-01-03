@@ -48,20 +48,16 @@ int callback_stat(struct libwebsocket_context *,
                   void *, 
                   size_t);
 
-
-#define MAX_SHORT_NAME 32
-#define MAX_FILENAME 64
-
-static struct stat_file {
-        char call[MAX_SHORT_NAME];
-        char filename[MAX_FILENAME];
-        int fd;
-    }; 
-
-#define STAT_FILES 3
+/*
+    Session data  
+*/
+#define MAX_STAT_REQ 128 
+#define MAX_STAT_FILES 255
 
 struct stat_session_data {
-    struct stat_file f[STAT_FILES];
+    char reqs[MAX_STAT_FILES][MAX_STAT_REQ];
+    int fds[MAX_STAT_FILES];
+    uint len;
 };
 
 static struct libwebsocket_protocols protocols[] = {

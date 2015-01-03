@@ -29,4 +29,12 @@ static struct lws_context_creation_info webserver_config = {
             .provided_client_ssl_ctx = NULL
         };
 
+/*
+    Statdata configuration
+*/
+
+#define DATA_PREFIX "/home/mkrentovskiy/develop/nets/showmestat/mocks"
+#define DATA_PATH_LEN (strlen(DATA_PREFIX) + MAX_STATIC_PATH)
+#define MAX_BUFFER_LEN 64 * 1024 // 64k
+
 #endif

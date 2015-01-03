@@ -1,29 +1,45 @@
 (function($) {
     var ws = null;
-
+    var repeat = function(f) { setTimeout(f, 1000) };
+    
     $.app = {}
     $.app.init = function() {
         window.WebSocket = window.WebSocket || window.MozWebSocket;
-        connect();
+        connect(true);
     }
 
-    function connect() {
+    function connect(first_time) {
         ui_con_state('connecting');
 
         ws = new WebSocket('ws://' + window.location.host + '/', 'stat');
         ws.onopen = function() {
             ui_con_state('connected');            
+            if(first_time) {
+                repeat(function() { get('flows'); });
+                repeat(function() { get('hosts'); });
+            }
         }
         ws.onerror = function() {
             ui_con_state('error');
-            setTimeout(connect, 1000);
+            repeat(function() { connect(false); });
         }
-        ws.onmessage = function(m) { if(m.data) process(m.data); }
+        ws.onclose = function() {
+            ui_con_state('connecting');
+            window.location.reload();
+        }
+        ws.onmessage = function(m) { 
+            if(m.data) { 
+                obj = JSON && JSON.parse(m.data) || $.parseJSON(m.data);
+                console.log(obj);
+            } 
+        }
     }
 
-
-    function process(d) {
-        console.log(d);
+    function get(t) {
+        if(ws.readyState == ws.OPEN) {
+            ws.send(t);
+        } 
+        repeat(function(){ get(t); });
     }
 
     /*
