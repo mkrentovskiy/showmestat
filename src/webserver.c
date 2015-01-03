@@ -41,43 +41,6 @@ int callback_http(struct libwebsocket_context *context,
     return 0;
 }
 
-int callback_stat(struct libwebsocket_context *context,
-                  struct libwebsocket *wsi,
-                  enum libwebsocket_callback_reasons reason, 
-                  void *user,
-                  void *in, 
-                  size_t len)
-{
-    struct stat_session_data *state = (struct stat_session_data *) user;
-
-    switch (reason) {
-        case LWS_CALLBACK_CLIENT_WRITEABLE: {
-            state->fd = open(TARGET_FILE, O_RDONLY); 
-            break;            
-        }
-            
-        case LWS_CALLBACK_HTTP: {
-            char *request = (char *) in;
-            
-            if(!strcmp(request, "/get")) {
-                lwsl_notice("STAT: Request for content.\n");
-            }
-
-            break;
-        }
-
-        case LWS_CALLBACK_CLOSED_HTTP:
-        {
-            if(state->fd) {
-                close(state->fd);
-                state->fd = 0;
-            } 
-            break;            
-        }
-    }
-    return 0;
-}
-
 bool internal_loop;
 void sighandler(int sig)
 {

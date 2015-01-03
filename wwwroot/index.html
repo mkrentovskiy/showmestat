@@ -7,11 +7,10 @@
   <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" media="all">
   <link rel="stylesheet" type="text/css" href="/css/fonts.css" media="all">
   <style type="text/css">
-    body { font-family: 'PT Sans Narrow'; background: #f0f0f0; color: #111; }
+    body { background: #f0f0f0; color: #111; }
     h1 { font-family: 'PT Sans Narrow'; padding-left: 30px; }
     h2 { font-family: 'PT Sans Narrow'; padding-left: 10px; color: #066; }
 
-    .con_state { background: #ddd; color: #999; font-size: 14px; text-align: center; padding: 10px 20px; }
     .container { background: #fff; }
     .brick1 { margin-top: 10px; }
     .brick2 { margin-top: 20px; }
@@ -19,8 +18,23 @@
   </style> 
 </head>
 <body>
-  <div class="con_state"></div>
   <div class="container" id="common">
+    <div class="row brick2">
+      <div class="col-md-12">
+        <div class="con_state con_state_connecting alert alert-info" role="alert">
+          <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+          Try to connect...          
+        </div>
+        <div class="con_state con_state_connected alert alert-success" role="alert">
+          <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
+          Successfuly connected to server.
+        </div>
+        <div class="con_state con_state_error alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          Error in server connection.
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-md-6">
         <h2>Hosts</h2>
@@ -73,18 +87,60 @@
             <div class="type">DNS</div>
             <div class="prio">High</div>
           </li>
+          <li>
+            <div class="proto">IP:UDP</div>
+            <div class="src">192.168.1.10:8734</div>
+            <div class="dst">8.8.8.8:53</div>
+            <div class="type">DNS</div>
+            <div class="prio">High</div>
+          </li>
+          <li>
+            <div class="proto">IP:UDP</div>
+            <div class="src">192.168.1.10:8734</div>
+            <div class="dst">8.8.8.8:53</div>
+            <div class="type">DNS</div>
+            <div class="prio">High</div>
+          </li>
+          <li>
+            <div class="proto">IP:UDP</div>
+            <div class="src">192.168.1.10:8734</div>
+            <div class="dst">8.8.8.8:53</div>
+            <div class="type">DNS</div>
+            <div class="prio">High</div>
+          </li>
+          <li>
+            <div class="proto">IP:UDP</div>
+            <div class="src">192.168.1.10:8734</div>
+            <div class="dst">8.8.8.8:53</div>
+            <div class="type">DNS</div>
+            <div class="prio">High</div>
+          </li>
+          <li>
+            <div class="proto">IP:UDP</div>
+            <div class="src">192.168.1.10:8734</div>
+            <div class="dst">8.8.8.8:53</div>
+            <div class="type">DNS</div>
+            <div class="prio">High</div>
+          </li>
         </ul>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-8">
         <h2>Traffic stat</h2>
         <table class="table">
+          <tr>
+            <th>Type</th>
+            <th>In, bytes</th>
+            <th>In, packets</th>
+            <th>Out, bytes</th>
+            <th>Out, packets</th>
+          </tr>
         </table> 
       </div>
     </div>
   </div>
-  <div class="container" id="host">
+  <div class="container hide" id="host">
     <div class="row">
       <div class="col-md-12">
         <h2>Traffic stat</h2>

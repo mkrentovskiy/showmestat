@@ -5,8 +5,8 @@
     Web-server configuratons
 */
 
+#define MAX_STATIC_PATH 64
 #define DOCUMENT_ROOT "/home/mkrentovskiy/develop/nets/showmestat/wwwroot"
-#define MAX_STATIC_PATH 30
 #define STATIC_PATH_LEN (strlen(DOCUMENT_ROOT) + MAX_STATIC_PATH)
 
 static struct lws_context_creation_info webserver_config = {
@@ -28,11 +28,5 @@ static struct lws_context_creation_info webserver_config = {
             .ka_interval = 500,
             .provided_client_ssl_ctx = NULL
         };
-
-/*
-    Application configuration
-*/
-
-#define TARGET_FILE "test.txt"
 
 #endif
