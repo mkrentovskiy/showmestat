@@ -22,13 +22,52 @@ static inline bool validate(char *in)
     return true;
 }
 
+static inline int dump(int fd, 
+                       char *buf, 
+                       uint max_len)
+{
+    int i, r = 0;
+
+    lseek(fd, 0, SEEK_SET);
+    r = read(fd, buf, max_len);
+    for(i = 0; i < r; i++) {
+        if(buf[i] == 0x0a) buf[i] = ';';
+    }
+    return r;
+} 
+
+
 static inline int req_to_buf(struct stat_session_data *state,
                              char *in, 
                              char *buf, 
                              uint max_len) 
 {
-    return 0;
+    int an = state->len++, i, fd, len = 0;
+    char path[DATA_PATH_LEN];
+
+    for(i = 0; i < state->len - 1; i++) {
+        if(!strcmp(state->reqs[i], in)) { 
+            state->len--;
+            return dump(state->fds[i], buf, max_len);  
+        } 
+    }
+
+#define ER(str) { lwsl_notice("STAT: "str" (%s)\n", in); return 0; }
+
+    if(an >= MAX_STAT_FILES) ER("Nowere hide");
+    if((len = strlen(in)) >= MAX_STAT_REQ) ER("Filename is too long");
+    
+    strcpy(path, DATA_PREFIX);
+    strcpy(path + strlen(DATA_PREFIX), in);
+
+    if( (fd = open(path, O_RDONLY)) > 0) {
+        strcpy(state->reqs[an], in);
+        state->fds[an] = fd;
+        lwsl_notice("STAT: Add file %s \n", path);
+        return dump(fd, buf, max_len);
+    } else ER("Can't open file");  
 }
+
 
 int callback_stat(struct libwebsocket_context *context,
                   struct libwebsocket *wsi,

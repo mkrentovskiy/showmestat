@@ -33,8 +33,8 @@ static struct lws_context_creation_info webserver_config = {
     Statdata configuration
 */
 
-#define DATA_PREFIX "/home/mkrentovskiy/develop/nets/showmestat/mocks"
-#define DATA_PATH_LEN (strlen(DATA_PREFIX) + MAX_STATIC_PATH)
+#define DATA_PREFIX "/home/mkrentovskiy/develop/nets/showmestat/mocks/"
+#define DATA_PATH_LEN (strlen(DATA_PREFIX) + MAX_STAT_REQ)
 #define MAX_BUFFER_LEN 64 * 1024 // 64k
 
 #endif

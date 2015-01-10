@@ -16,6 +16,7 @@
             ui_con_state('connected');            
             if(first_time) {
                 repeat(function() { get('flows'); });
+                repeat(function() { get('protocols'); });
                 repeat(function() { get('hosts'); });
             }
         }
@@ -40,7 +41,7 @@
             ws.send(t);
         } 
         repeat(function(){ get(t); });
-    }
+    }       
 
     /*
         UI
