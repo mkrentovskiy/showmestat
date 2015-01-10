@@ -1,8 +1,30 @@
-@font-face {font-family: 'PT Sans Narrow';
+@font-face {
+    font-family: 'PT Sans Narrow';
 	src: url('../fonts/ptn57f_w.eot');
-	src: local('PT Sans Narrow'), url('../fonts/PTN57F_W.woff') format('woff'),url('../fonts/PTN57F_W.ttf') format('truetype'), url('../fonts/PTN57F_W.svg#PTSans-Narrow') format('svg');}
+	src: local('PT Sans Narrow'), 
+         url('../fonts/PTN57F_W.woff') format('woff'),
+         url('../fonts/PTN57F_W.ttf') format('truetype'), 
+         url('../fonts/PTN57F_W.svg#PTSans-Narrow') format('svg');
+}
 
-@font-face {font-family: 'PT Sans Narrow';
+@font-face {
+    font-family: 'PT Sans Narrow';
 	font-weight: bold; 
 	src: url('../fonts/ptn77f_w.eot');
-	src: local('PT Sans Narrow Bold'), url('../fonts/PTN77F_W.woff') format('woff'),url('../fonts/PTN77F_W.ttf') format('truetype'), url('../fonts/PTN77F_W.svg#PTSans-NarrowBold') format('svg');}
+	src: local('PT Sans Narrow Bold'), 
+         url('../fonts/PTN77F_W.woff') format('woff'),
+         url('../fonts/PTN77F_W.ttf') format('truetype'), 
+         url('../fonts/PTN77F_W.svg#PTSans-NarrowBold') format('svg');
+}
+
+@font-face {
+    font-family: 'icomoon';
+    src: url('../fonts/icomoon-free-webfont.eot');
+    src: url('../fonts/icomoon-free-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/icomoon-free-webfont.woff2') format('woff2'),
+         url('../fonts/icomoon-free-webfont.woff') format('woff'),
+         url('../fonts/icomoon-free-webfont.ttf') format('truetype'),
+         url('../fonts/icomoon-free-webfont.svg#icomoon-freeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

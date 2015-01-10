@@ -15,6 +15,17 @@
     .brick1 { margin-top: 10px; }
     .brick2 { margin-top: 20px; }
     .r { text-align: right; }
+
+    div.topbox { height: 300px; overflow: auto; }
+    ul.flows { padding: 10px; }
+    ul.flows li { list-style-type: none !important; padding: 5px 5px 5px 28px !important; opacity: 0.8; }
+    ul.flows li.unknown { background: url('i/0207-eye.png') no-repeat 0px 20px; }
+    ul.flows li.torrent { background: url('i/0326-tab.png') no-repeat 0px 20px; }
+    ul.flows li.skype { background: url('i/0455-skype.png') no-repeat 0px 20px; }
+    ul.flows div.proto { font-size: 12px; color: #049; }
+    span.arr { color: #ccc; }
+    span.dst { color: #000; padding-left: 4px; }
+    span.src { color: #000; padding-right: 4px; }    
   </style> 
 </head>
 <body>
@@ -38,91 +49,15 @@
     <div class="row">
       <div class="col-md-6">
         <h2>Hosts</h2>
-        <ul class="hosts">
-          <li>
-            <div class="host_name">XBMC Media box</div>
-            <div class="host_os">Linux</div> 
-            <div class="host_ip">192.168.1.1</div>
-            <div class="host_mac">01:23:45:67:89:AB</div>
-          </li>
-          <li>
-            <div class="host_name">Design MacBook</div>
-            <div class="host_os">Mac OS X</div> 
-            <div class="host_ip">192.168.1.10</div>
-            <div class="host_mac">01:23:45:67:89:AB</div>
-          </li>
-          <li>
-            <div class="host_name">Tester's desktop</div>
-            <div class="host_os">Windows 7</div> 
-            <div class="host_ip">192.168.1.11</div>
-            <div class="host_mac">01:23:45:67:89:AB</div>
-          </li>
-          <li>
-            <div class="host_name">android-902188193749233720</div>
-            <div class="host_os">Android phone</div> 
-            <div class="host_ip">192.168.1.12</div>
-            <div class="host_mac">01:23:45:67:89:AB</div>
-          </li>
-          <li>
-            <div class="host_name">Designer iPad</div>
-            <div class="host_os">Apple iOS</div> 
-            <div class="host_ip">192.168.1.10</div>
-            <div class="host_mac">01:23:45:67:89:AB</div>
-          </li>
-          <li>
-            <div class="host_name">IoT-hub-wlan-1290309239029</div>
-            <div class="host_os">Network device</div> 
-            <div class="host_ip">192.168.1.10</div>
-            <div class="host_mac">01:23:45:67:89:AB</div>
-          </li>
-        </ul>
+        <div class="topbox">
+          <ul class="hosts"></ul>        
+        </div>
       </div>
       <div class="col-md-6">
-        <h2>Session</h2>
-        <ul class="sessions">
-          <li>
-            <div class="proto">IP:UDP</div>
-            <div class="src">192.168.1.10:8734</div>
-            <div class="dst">8.8.8.8:53</div>
-            <div class="type">DNS</div>
-            <div class="prio">High</div>
-          </li>
-          <li>
-            <div class="proto">IP:UDP</div>
-            <div class="src">192.168.1.10:8734</div>
-            <div class="dst">8.8.8.8:53</div>
-            <div class="type">DNS</div>
-            <div class="prio">High</div>
-          </li>
-          <li>
-            <div class="proto">IP:UDP</div>
-            <div class="src">192.168.1.10:8734</div>
-            <div class="dst">8.8.8.8:53</div>
-            <div class="type">DNS</div>
-            <div class="prio">High</div>
-          </li>
-          <li>
-            <div class="proto">IP:UDP</div>
-            <div class="src">192.168.1.10:8734</div>
-            <div class="dst">8.8.8.8:53</div>
-            <div class="type">DNS</div>
-            <div class="prio">High</div>
-          </li>
-          <li>
-            <div class="proto">IP:UDP</div>
-            <div class="src">192.168.1.10:8734</div>
-            <div class="dst">8.8.8.8:53</div>
-            <div class="type">DNS</div>
-            <div class="prio">High</div>
-          </li>
-          <li>
-            <div class="proto">IP:UDP</div>
-            <div class="src">192.168.1.10:8734</div>
-            <div class="dst">8.8.8.8:53</div>
-            <div class="type">DNS</div>
-            <div class="prio">High</div>
-          </li>
-        </ul>
+        <h2>Flows</h2>
+        <div class="topbox">
+          <ul class="flows"></ul>
+        </div>
       </div>
     </div>
     <div class="row">
@@ -150,6 +85,15 @@
     </div>
   </div>
   
+  <div class="hide">
+    <div id="flows" class="_template">
+      <li class="@3@">
+        <div class="proto">@0@:@3@</div>
+        <div class="link"><span class="src">@1@</span><span class="glyphicon glyphicon-arrow-right arr"><span class="dst">@2@</span></span></div>
+      </li>
+    </div>
+    
+  </div>
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
   <script src="/js/d3.min.js"></script>
