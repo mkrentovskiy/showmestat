@@ -1,7 +1,38 @@
 (function($) {
     var ws = null;
-    var repeat = function(f) { setTimeout(f, 1000) };
-    var t = {};
+    
+    var t = {}; // Templates
+
+    var host_tr_def = "unknown";
+    var hosts_tr = [
+            ["Android", "android"],
+            ["Apple", "apple"],
+            ["BSD", "bsd"],
+            ["CD-Based OSes", "cd"],
+            ["Datacenter appliance", "datacenter"],
+            ["Dead OSes", "dead"],
+            ["Gaming Consoles", "console"],
+            ["Home Audio/Video Equipment", "avhome"],
+            ["Linux", "linux"],
+            ["Misc", "misc"],
+            ["Monitoring Devices", "monitor"],
+            ["Network Boot Agents", "net"],
+            ["Physical Security", "security"],
+            ["Point of Sale devices", "pos"],
+            ["Printers", "printer"],
+            ["Projectors", "projector"],
+            ["Routers and APs", "router"],
+            ["Smartphones/PDAs/Tablets", "tablet"],
+            ["Solaris", "solaris"],
+            ["Storage Devices", "storage"],
+            ["Switches", "switch"],
+            ["Thin Clients", "thin"],
+            ["Video Conferencing", "vc"],
+            ["VoIP Phones/Adapters", "voip"],
+            ["Windows", "windows"],
+            ["Unknown", host_tr_def]
+        ];
+
 
     $.app = {}
     $.app.init = function() {
@@ -11,6 +42,11 @@
         connect(true);
     }
 
+    /*
+        Communications
+    */
+
+    function repeat(f) { setTimeout(f, 1000) };
     function connect(first_time) {
         ui_con_state('connecting');
 
@@ -54,10 +90,18 @@
 
     function ui_con_state(state) { $(".con_state").hide(); $(".con_state_" + state).show(); }
     function ui_apply(cl, data, cb) {
-        $("." + cl).html($.map(data, function(v, k) { return ui_apply_template(cl, v); }).join(''));
+        $("." + cl).html($.map(data, function(v, k) { return ui_apply_template(cl, atr(cl, v)); }).join(''));
         // if(cb) cb();
     }
 
+    function atr(cl, d) {
+        if(cl == "hosts") {
+            d.push(hosts_tr.reduce(function(prev, curr, i, a) { 
+                    return (curr[0] == d[1]) ? curr[1] : prev; 
+                }, host_tr_def));
+        } 
+        return d;
+    }
     function ui_apply_template(cl, data) {        
         return data.reduce(function(prev, curr, i, a) { return prev.replace(new RegExp("@" + i + "@", 'g'), curr); }, t[cl]);
     }

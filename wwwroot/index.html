@@ -17,15 +17,52 @@
     .r { text-align: right; }
 
     div.topbox { height: 300px; overflow: auto; }
+    
     ul.flows { padding: 10px; }
-    ul.flows li { list-style-type: none !important; padding: 5px 5px 5px 28px !important; opacity: 0.8; }
+    ul.flows li { list-style-type: none !important; padding: 5px 5px 8px 28px !important; opacity: 0.9; }
+    
     ul.flows li.unknown { background: url('i/0207-eye.png') no-repeat 0px 20px; }
     ul.flows li.torrent { background: url('i/0326-tab.png') no-repeat 0px 20px; }
     ul.flows li.skype { background: url('i/0455-skype.png') no-repeat 0px 20px; }
-    ul.flows div.proto { font-size: 12px; color: #049; }
-    span.arr { color: #ccc; }
-    span.dst { color: #000; padding-left: 4px; }
-    span.src { color: #000; padding-right: 4px; }    
+    
+    ul.flows div.proto { font-size: 12px; color: #333; }
+    span.arr { color: #ccc; line-height: 14px; }
+    span.dst { color: #049; padding-left: 4px; font-family: 'PT Sans Narrow'; font-size: 18px; }
+    span.src { color: #049; padding-right: 4px; font-family: 'PT Sans Narrow'; font-size: 18px; }   
+
+    ul.hosts { padding: 10px; }
+    ul.hosts li { list-style-type: none !important; padding: 5px 5px 8px 28px !important; opacity: 0.9; }
+    
+    ul.hosts li.android { background: url('i/0450-android.png') no-repeat 0px 20px; }
+    ul.hosts li.apple { background: url('i/0448-apple.png') no-repeat 0px 20px; }
+    ul.hosts li.bsd { background: url('i/0241-evil2.png') no-repeat 0px 20px; }
+    ul.hosts li.cd { background: url('i/0342-radio-checked2.png') no-repeat 0px 20px; }
+    ul.hosts li.datacenter { background: url('i/0101-database.png') no-repeat 0px 20px; }
+    ul.hosts li.dead { background: url('i/0025-clubs.png') no-repeat 0px 20px; }
+    ul.hosts li.console { background: url('i/0022-dice.png') no-repeat 0px 20px; }
+    ul.hosts li.avhome { background: url('i/0092-tv.png') no-repeat 0px 20px; }
+    ul.hosts li.linux { background: url('i/0447-tux.png') no-repeat 0px 20px; }
+    ul.hosts li.misc { background: url('i/0047-stack.png') no-repeat 0px 20px; }
+    ul.hosts li.monitor { background: url('i/0156-stats-dots.png') no-repeat 0px 20px; }
+    ul.hosts li.net { background: url('i/0189-tree.png') no-repeat 0px 20px; }
+    ul.hosts li.security { background: url('i/0144-lock.png') no-repeat 0px 20px; }
+    ul.hosts li.pos { background: url('i/0064-credit-card.png') no-repeat 0px 20px; }
+    ul.hosts li.printer { background: url('i/0085-printer.png') no-repeat 0px 20px; }
+    ul.hosts li.projector { background: url('i/0100-drive.png') no-repeat 0px 20px; }
+    ul.hosts li.router { background: url('i/0305-shuffle.png') no-repeat 0px 20px; }
+    ul.hosts li.tablet { background: url('i/0091-tablet.png') no-repeat 0px 20px; }
+    ul.hosts li.solaris { background: url('i/0213-sun.png') no-repeat 0px 20px; }
+    ul.hosts li.storage { background: url('i/0099-floppy-disk.png') no-repeat 0px 20px; }
+    ul.hosts li.switch { background: url('i/0201-upload3.png') no-repeat 0px 20px; }
+    ul.hosts li.thin { background: url('i/0087-display.png') no-repeat 0px 20px; }
+    ul.hosts li.vc { background: url('i/0021-video-camera.png') no-repeat 0px 20px; }
+    ul.hosts li.voip { background: url('i/0067-phone.png') no-repeat 0px 20px; }
+    ul.hosts li.windows { background: url('i/0451-windows.png') no-repeat 0px 20px; }
+    ul.hosts li.unknown { background: url('i/0207-eye.png') no-repeat 0px 20px; }
+    
+    ul.hosts div.mac { font-family: 'PT Sans Narrow'; font-size: 18px; color: #094; text-transform: uppercase; }
+    ul.hosts div.name { font-family: 'PT Sans Narrow'; font-size: 14px; line-height: 20px; }
+    ul.hosts div.type { font-size: 12px; color: #999; line-height: 14px; }
   </style> 
 </head>
 <body>
@@ -90,6 +127,13 @@
       <li class="@3@">
         <div class="proto">@0@:@3@</div>
         <div class="link"><span class="src">@1@</span><span class="glyphicon glyphicon-arrow-right arr"><span class="dst">@2@</span></span></div>
+      </li>
+    </div>
+    <div id="hosts" class="_template">
+      <li class="@4@">
+        <div class="mac">@0@</div>
+        <div class="name">@3@</div>
+        <div class="type">@1@ @2@</div>
       </li>
     </div>
     
