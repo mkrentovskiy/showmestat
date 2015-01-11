@@ -2,6 +2,8 @@
     var ws = null;
     
     var t = {}; // Templates
+    var ti = {}; // Init values
+    var statistics = ['flows', 'protocols', 'hosts'];
 
     var host_tr_def = "unknown";
     var hosts_tr = [
@@ -54,9 +56,7 @@
         ws.onopen = function() {
             ui_con_state('connected');            
             if(first_time) {
-                repeat(function() { get('flows'); });
-                repeat(function() { get('protocols'); });
-                repeat(function() { get('hosts'); });
+                $.map(statistics, function(v, k) { repeat(function() { get(v); }); });
             }
         }
         ws.onerror = function() {
@@ -85,13 +85,16 @@
     */
 
     function ui_init() {
+        $.map(statistics, function(v, i) { ti[v] = $("." + v).html(); });
         $.map($("._template"), function(v, i) { t[$(v).attr('id')] = $(v).html(); });
     };
 
     function ui_con_state(state) { $(".con_state").hide(); $(".con_state_" + state).show(); }
     function ui_apply(cl, data, cb) {
-        $("." + cl).html($.map(data, function(v, k) { return ui_apply_template(cl, atr(cl, v)); }).join(''));
-        // if(cb) cb();
+        $("." + cl).html(ti[cl] + 
+            $.map(data, function(v, k) { return ui_apply_template(cl, atr(cl, v)); }).join(''));
+        if(cl == "protocols") ui_charts(data);
+        if(cb) cb();
     }
 
     function atr(cl, d) {
@@ -99,11 +102,50 @@
             d.push(hosts_tr.reduce(function(prev, curr, i, a) { 
                     return (curr[0] == d[1]) ? curr[1] : prev; 
                 }, host_tr_def));
-        } 
+        } else if(cl == "protocols") {
+            for(i = 1; i < 5; i++) d.push(d[i].replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 '));
+        }
         return d;
     }
     function ui_apply_template(cl, data) {        
         return data.reduce(function(prev, curr, i, a) { return prev.replace(new RegExp("@" + i + "@", 'g'), curr); }, t[cl]);
+    }
+
+    function ui_charts(d) {
+        for(i = 1; i < 5; i++) chart($("#g" + i).html("").toArray(), 
+                                     $.map(d, function(v, k) { return v[0]; }),
+                                     $.map(d, function(v, k) { return parseInt(v[i]); }),
+                                     300,
+                                     300);   
+    }
+
+    function chart(place, headers, data, w, h) {
+        var outerRadius = w / 2;
+        var innerRadius = w / 15;
+
+        var color = d3.scale.category20();
+        var pie = d3.layout.pie();
+        var m = data.reduce(function(pv, cv) { return pv + cv; }, 0);
+        var arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius);
+        var svg = d3.selectAll(place).append("svg").attr("width", w).attr("height", h);
+
+        var arcs = svg.selectAll("g.arc")
+                      .data(pie(data))
+                      .enter()
+                      .append("g")
+                      .attr("class", "arc")
+                      .attr("transform", "translate(" + outerRadius + ", " + outerRadius + ")");
+
+        arcs.append("path")
+            .attr("fill", function(d, c) { return color(c);})
+            .attr("d", arc);
+        
+        arcs.append("text")
+            .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+            .attr("text-anchor", "middle")
+            .text(function(d) {
+                    return ((d.value * 100 / m) > 10) ? headers[(data.indexOf(d.value))] : "";
+                });
     }
 
 
