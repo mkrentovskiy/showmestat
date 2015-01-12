@@ -6,7 +6,7 @@
 */
 
 #define MAX_STATIC_PATH 64
-#define DOCUMENT_ROOT "/home/mkrentovskiy/develop/nets/showmestat/wwwroot"
+#define DOCUMENT_ROOT "/usr/share/showmestat/wwwroot"
 #define STATIC_PATH_LEN (strlen(DOCUMENT_ROOT) + MAX_STATIC_PATH)
 
 static struct lws_context_creation_info webserver_config = {
@@ -33,8 +33,8 @@ static struct lws_context_creation_info webserver_config = {
     Statdata configuration
 */
 
-#define DATA_PREFIX "/home/mkrentovskiy/develop/nets/showmestat/mocks/"
+#define DATA_PREFIX "/usr/share/showmestat/mocks/"
 #define DATA_PATH_LEN (strlen(DATA_PREFIX) + MAX_STAT_REQ)
-#define MAX_BUFFER_LEN 64 * 1024 // 64k
+#define MAX_BUFFER_LEN 256 * 1024 // 256k
 
 #endif
