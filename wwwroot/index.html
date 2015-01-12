@@ -6,11 +6,16 @@
 
   <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" media="all">
   <link rel="stylesheet" type="text/css" href="/css/fonts.css" media="all">
+  <link rel="stylesheet" type="text/css" href="/css/nv.d3.min.css" media="all">
   <style type="text/css">
-    body { background: #f0f0f0; color: #111; }
-    h1 { font-family: 'PT Sans Narrow'; font-weight: bold; padding: 20px 0px 0px 30px; }
-    h2 { font-family: 'PT Sans Narrow'; font-weight: bold; padding: 20px 0px 0px 10px; color: #066; }
+    body { font-family: 'PT Sans Narrow'; background: #f0f0f0; color: #111; }
+    h1 { font-family: 'PT Sans Narrow'; font-weight: bold; font-size: 48px; padding: 0; line-height: 48px; margin: 30px 0 0 0; color: #333; }
+    h2 { font-family: 'PT Sans Narrow'; font-weight: bold; font-size: 24px; padding: 20px 0px 0px 10px; color: #066; }
     h3 { font-family: 'PT Sans Narrow'; font-weight: normal; padding: 5px 0px 0px 10px; color: #999; font-size: 18px; }
+
+    .logo { background: url('/i/logo.gif') no-repeat 50px 15px; padding: 0 0 0 200px; height: 110px; }
+    .subtitle { font-family: 'PT Sans Narrow'; color: #ccc; font-size: 18px; line-height: 18px; }
+    .leftc { padding: 0 0 20px 40px; }
 
     .container { background: #fff; }
     .brick1 { margin-top: 10px; }
@@ -32,7 +37,7 @@
     span.src { color: #049; padding-right: 4px; font-family: 'PT Sans Narrow'; font-size: 18px; }   
 
     ul.hosts { padding: 10px; }
-    ul.hosts li { list-style-type: none !important; padding: 5px 5px 8px 28px !important; opacity: 0.9; }
+    ul.hosts li { list-style-type: none !important; padding: 5px 5px 8px 28px !important; opacity: 0.9; width: 300px; float: left; }
     
     ul.hosts li.android { background: url('i/0450-android.png') no-repeat 0px 20px; }
     ul.hosts li.apple { background: url('i/0448-apple.png') no-repeat 0px 20px; }
@@ -61,12 +66,16 @@
     ul.hosts li.windows { background: url('i/0451-windows.png') no-repeat 0px 20px; }
     ul.hosts li.unknown { background: url('i/0207-eye.png') no-repeat 0px 20px; }
     
-    ul.hosts div.mac { font-family: 'PT Sans Narrow'; font-size: 18px; color: #094; text-transform: uppercase; }
+    ul.hosts div.mac { font-family: 'PT Sans Narrow'; font-size: 18px; color: #094; text-transform: uppercase; line-height: 24px; }
     ul.hosts div.name { font-family: 'PT Sans Narrow'; font-size: 14px; line-height: 20px; }
     ul.hosts div.type { font-size: 12px; color: #999; line-height: 14px; }
 
     div.diabox { padding: 65px 0px 45px 35px; }
     div.dia { width: 300px; height: 300px; background: #f0f0f0; }
+
+    div.barbox1 { padding: 35px 0px 0px 0px; }
+    div.bar { width: 600px; height: 200px; background: #f0f0f0; }
+    div.bar svg { width: 600px; height: 200px; }
   </style> 
 </head>
 <body>
@@ -79,7 +88,7 @@
         </div>
         <div class="con_state con_state_connected alert alert-success" role="alert">
           <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
-          Successfuly connected to server.
+          <span class="ml">Successfuly connected to server.
         </div>
         <div class="con_state con_state_error alert alert-danger" role="alert">
           <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -87,20 +96,38 @@
         </div>
       </div>
     </div>
+    
+    <div class="row brick2">
+      <div class="col-md-12 logo">
+        <h1>NTCE</h1>
+        <div class="subtitle">NDM traffic classification engine</div>
+      </div>
+    </div>
+
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-5 leftc">
+        <h2>Flows</h2>
+        <div>
+          <ul class="flows"></ul>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="barbox1">
+          <h3>Protocols, flows count</h3>
+          <div id="bar_flows" class="bar"><svg></svg></div>
+        </div>
+        <div>
+          <h3>Protocols in times, flows count</h3>
+          <div id="bar_flows_timeline" class="bar"><svg></svg></div>
+        </div>
         <h2>Hosts</h2>
         <div class="topbox">
           <ul class="hosts"></ul>        
         </div>
       </div>
-      <div class="col-md-6">
-        <h2>Flows</h2>
-        <div class="topbox">
-          <ul class="flows"></ul>
-        </div>
-      </div>
     </div>
+    
+    <!--
     <div class="row">
       <div class="col-md-8">
         <h2>Protocols</h2>
@@ -135,6 +162,7 @@
         </div>
       </div>
     </div>
+    -->
   </div>
   
   <div class="hide">
@@ -151,6 +179,7 @@
         <div class="type">@1@ @2@</div>
       </li>
     </div>
+    <!-- 
     <table>
       <tbody id="protocols" class="_template">
         <tr>
@@ -162,11 +191,13 @@
         </tr>
       </tbody>
     </table>
+    -->
   </div>
 
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
   <script src="/js/d3.min.js"></script> 
+  <script src="/js/nv.d3.min.js"></script> 
   <script src="/js/showmestat.js"></script>
 </body>
 </html>

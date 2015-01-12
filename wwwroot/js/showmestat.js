@@ -3,7 +3,11 @@
     
     var t = {}; // Templates
     var ti = {}; // Init values
-    var statistics = ['flows', 'protocols', 'hosts'];
+    var statistics = ['flows', 'hosts']; // 'protocols',
+    
+    var flows_protocols = [];
+    var flows_timeline = [];
+    var MAX_TIMELINE_ELEMENTS = 60;
 
     var host_tr_def = "unknown";
     var hosts_tr = [
@@ -93,7 +97,8 @@
     function ui_apply(cl, data, cb) {
         $("." + cl).html(ti[cl] + 
             $.map(data, function(v, k) { return ui_apply_template(cl, atr(cl, v)); }).join(''));
-        if(cl == "protocols") ui_charts(data);
+        if(cl == "flows") ui_graphs(data);
+        else if(cl == "protocols") ui_charts(data);
         if(cb) cb();
     }
 
@@ -111,6 +116,70 @@
         return data.reduce(function(prev, curr, i, a) { return prev.replace(new RegExp("@" + i + "@", 'g'), curr); }, t[cl]);
     }
 
+    /*
+        graphs
+    */
+    function ui_graphs(data) {
+        var cnts = {};
+        $.map(data, function(v, k) { 
+                var proto = v[3];
+                
+                if(cnts[proto]) cnts[proto]++;  
+                else {
+                    cnts[proto] = 1;
+                    if(flows_protocols.indexOf(v[3]) == -1) flows_protocols.push(v[3]);
+                }
+            });
+
+        var now = [{ key: "By protocols", 
+                     values: $.map(cnts, function(v, k) { return {"label": k, "value": v}; }) }];
+
+        cnts["_now"] = Date.now();
+        if(flows_timeline.length >= MAX_TIMELINE_ELEMENTS) flows_timeline.shift(); 
+        flows_timeline.push(cnts);   
+
+        // current state
+        nv.addGraph(function() {
+            var chart = nv.models.discreteBarChart()
+                            .x(function(d) { return d.label })
+                            .y(function(d) { return d.value })
+                            .valueFormat(d3.format('d'))
+                            .staggerLabels(true)
+                            .tooltips(false)
+                            .showValues(true)
+                            .duration(250);
+
+            d3.select('#bar_flows svg').datum(now).call(chart);
+            return chart;
+        });
+
+        // timeline
+        var tl = $.map(flows_protocols, function(v, k) {
+                return { key: v, 
+                         values: 
+                            $.map(flows_timeline, function(vv, kk) { 
+                                    return { x: (vv['_now']), y: (vv[v] ? vv[v] : 0)}; 
+                                }) }
+            });
+        nv.addGraph(function() {
+            var chart = nv.models.multiBarChart()
+                .width($("#bar_flows_timeline").width())
+                .height($("#bar_flows_timeline").height())
+                .stacked(true);
+ 
+            chart.xAxis.tickFormat(function(d) { return d3.time.format('%M:%S')(new Date(d)) });
+            chart.yAxis.tickFormat(d3.format('d'));
+            d3.select('#bar_flows_timeline svg').datum(tl).call(chart);
+            return chart;
+        });
+
+    }
+
+
+    /*
+        charts
+    */
+
     function ui_charts(d) {
         for(i = 1; i < 5; i++) chart($("#g" + i).html("").toArray(), 
                                      $.map(d, function(v, k) { return v[0]; }),
@@ -118,7 +187,6 @@
                                      300,
                                      300);   
     }
-
     function chart(place, headers, data, w, h) {
         var outerRadius = w / 2;
         var innerRadius = w / 15;
