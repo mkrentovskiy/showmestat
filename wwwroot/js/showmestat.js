@@ -165,7 +165,7 @@
             var chart = nv.models.multiBarChart()
                 .width($("#bar_flows_timeline").width())
                 .height($("#bar_flows_timeline").height())
-                .stacked(true);
+                .stacked(false);
  
             chart.xAxis.tickFormat(function(d) { return d3.time.format('%M:%S')(new Date(d)) });
             chart.yAxis.tickFormat(d3.format('d'));
