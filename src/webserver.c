@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <stdarg.h>
 
 #include <libwebsockets.h>
 
