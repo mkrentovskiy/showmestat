@@ -97,15 +97,19 @@ int callback_stat(struct libwebsocket_context *context,
             buflen += req_to_buf(state,
                                  (char *)in, 
                                  &buf[LWS_SEND_BUFFER_PRE_PADDING + buflen], 
-                                 MAX_BUFFER_LEN - buflen - 3); /* "}/0 */
+                                 MAX_BUFFER_LEN - buflen - 3); /* "}\0 */
 
             buf[LWS_SEND_BUFFER_PRE_PADDING + buflen] = '"'; 
             buf[LWS_SEND_BUFFER_PRE_PADDING + buflen + 1] = '}'; 
-            buf[LWS_SEND_BUFFER_PRE_PADDING + buflen + 2] = '/0'; 
+            buf[LWS_SEND_BUFFER_PRE_PADDING + buflen + 2] = '\0'; 
             buflen += 2; 
 
-            libwebsocket_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], buflen, LWS_WRITE_TEXT);
+            libwebsocket_write(wsi, (unsigned char *) &buf[LWS_SEND_BUFFER_PRE_PADDING], buflen, LWS_WRITE_TEXT);
             break;
+        }
+
+        default: {
+            break;    
         }
     }
     return 0;

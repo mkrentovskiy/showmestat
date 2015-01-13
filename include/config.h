@@ -9,7 +9,7 @@
 #define DOCUMENT_ROOT "/usr/share/showmestat/wwwroot"
 #define STATIC_PATH_LEN (strlen(DOCUMENT_ROOT) + MAX_STATIC_PATH)
 
-static struct lws_context_creation_info webserver_config = {
+static __attribute__((used)) struct lws_context_creation_info webserver_config = {
             .port = 8000,
             .iface = NULL,
             .protocols = protocols, /* -> op.h */

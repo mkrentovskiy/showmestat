@@ -34,6 +34,10 @@ int callback_http(struct libwebsocket_context *context,
             }
             break;
         }
+        default: {
+            break;    
+        }
+
     }
 
     return 0;
